@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { Button, FormControl, InputLabel, Input } from '@material-ui/core';
 import Task from './Components/Task'
 import {db} from './firebase'
+import firebase from 'firebase'
 import './App.css'
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
 
   useEffect(() => {
     // this code runs when the app runs
-    db.collection('tasks').onSnapshot(snapshot => {
+    db.collection('tasks').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
       setTasks(snapshot.docs.map(doc => doc.data().task))
     })
   }, []);
@@ -32,7 +33,12 @@ function App() {
   // This function will run when the button is clicked
   const addTask = (e) => {
     e.preventDefault();           // Will Stop Page Refresh
-    setTasks([...tasks, input])   // Keeps previous state and appends new task
+    
+    db.collection('tasks').add({  // Keeps previous state and appends new task
+      task: input,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
     setInput('')                  // Clears the input field
   }
 
@@ -51,7 +57,7 @@ function App() {
       <div className="tasks_list">
         <ul>
           {tasks.map(task => (
-            <Task text={tasks}/>
+            <Task text={task}/>
           ))}
         </ul>
       </div>
