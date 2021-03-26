@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Button, FormControl, InputLabel, Input } from '@material-ui/core';
+import Task from './Components/Task'
 import './App.css'
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
 
       <ul>
         {tasks.map(task => (
-          <li>{task}</li>
+          <Task text={tasks}/>
         ))}
       </ul>
     </div>
