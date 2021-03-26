@@ -18,7 +18,7 @@ function App() {
   useEffect(() => {
     // this code runs when the app runs
     db.collection('tasks').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
-      setTasks(snapshot.docs.map(doc => doc.data().task))
+      setTasks(snapshot.docs.map(doc => ({id: doc.id, task: doc.data().task})))
     })
   }, []);
 
@@ -54,6 +54,7 @@ function App() {
         <Button disabled={!input} type="submit" onClick={addTask} variant="contained" color="primary">Add a task</Button>
         {/* <button type="submit" onClick={addTask}>Add a task</button> */}
       </form>
+      
       <div className="tasks_list">
         <ul>
           {tasks.map(task => (
